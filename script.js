@@ -1,5 +1,6 @@
 
 let bookMarkArr = []
+let bookMarkIdArr = []
 
 
 const getCategories = () => {
@@ -41,7 +42,7 @@ const showCategoreNews = (articles) => {
                     </div>
                     <div class="mt-3">
                         <button class="btn">Details</button>
-                        <button class="btn">BookMark</button>
+                        <button class="btn btn-primary">BookMark</button>
                     </div>
                 </div>
     `
@@ -54,12 +55,6 @@ const showCategoreNews = (articles) => {
 document.getElementById('news-card-container').addEventListener('click', (e) => {
     if (e.target.innerText === "BookMark") {
         let bookmarkBtn = e.target;
-        if(bookmarkBtn.classList[1] ==="mark"){
-            alert('You Already BookMark This One')
-            return
-        }
-        bookmarkBtn.classList.add('mark')
-        
         let bookmarkId = bookmarkBtn.parentNode.parentNode.getAttribute("id")
         let bookmarkTitle = bookmarkBtn.parentNode.parentNode.querySelector('h2').innerText;
         let bookmarkImg = bookmarkBtn.parentNode.parentNode.querySelector('img').getAttribute("src")
@@ -69,8 +64,12 @@ document.getElementById('news-card-container').addEventListener('click', (e) => 
             id: bookmarkId,
             img: bookmarkImg
         }
+        if(bookMarkIdArr.includes(bookmarkId)){
+            alert('you already book mark')
+             return
+        }
+        bookMarkIdArr.push(bookmarkId)
         bookMarkArr.push(bookMarkObj)
-        
         showBookMarks(bookMarkArr)
 
     }
@@ -79,6 +78,11 @@ const showBookMarks = (bookMarkArr) => {
     let bookMarkContainer = document.getElementById('bookmark-container')
     bookMarkContainer.innerHTML = ""
     bookMarkArr.forEach(bookmark => {
+        if(bookMarkIdArr.includes(bookmark.id)){
+            console.log(bookMarkIdArr);
+            
+        };
+        
         bookMarkContainer.innerHTML += `
      <div class="bookmark px-5 py-5 border-2 border-gray-500 rounded-lg mt-4">
                  <div class="mb-5">
@@ -92,10 +96,13 @@ const showBookMarks = (bookMarkArr) => {
     )
 }
 const deleteBookmark = (bookMarkId) => {
-
 let filterBookMarkArr= bookMarkArr.filter(bookmark => bookmark.id !==bookMarkId);
 bookMarkArr = filterBookMarkArr
 showBookMarks(bookMarkArr)
+let filterbookMarkIdArr = bookMarkIdArr.filter(id => id!==bookMarkId )
+ bookMarkIdArr = filterbookMarkIdArr
+ 
+ 
 
 }
 
@@ -111,7 +118,5 @@ document.getElementById('category-link-container').addEventListener("click", (e)
     };
 
 })
-
-
 getNews('main')
 getCategories()
