@@ -54,7 +54,12 @@ const showCategoreNews = (articles) => {
 document.getElementById('news-card-container').addEventListener('click', (e) => {
     if (e.target.innerText === "BookMark") {
         let bookmarkBtn = e.target;
-
+        if(bookmarkBtn.classList[1] ==="mark"){
+            alert('You Already BookMark This One')
+            return
+        }
+        bookmarkBtn.classList.add('mark')
+        
         let bookmarkId = bookmarkBtn.parentNode.parentNode.getAttribute("id")
         let bookmarkTitle = bookmarkBtn.parentNode.parentNode.querySelector('h2').innerText;
         let bookmarkImg = bookmarkBtn.parentNode.parentNode.querySelector('img').getAttribute("src")
@@ -65,7 +70,6 @@ document.getElementById('news-card-container').addEventListener('click', (e) => 
             img: bookmarkImg
         }
         bookMarkArr.push(bookMarkObj)
-        bookMarkIdArr.push(bookmarkId)
         
         showBookMarks(bookMarkArr)
 
