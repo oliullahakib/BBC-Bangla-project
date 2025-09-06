@@ -1,3 +1,7 @@
+
+let bookMarkArr = []
+
+
 const getCategories = () => {
     const url = "https://news-api-fs.vercel.app/api/categories"
     fetch(url).then((res) => res.json()).then((categoriesObj) => makeCategoriesLink(categoriesObj.categories)
@@ -10,7 +14,7 @@ const makeCategoriesLink = (categories) => {
     <li id = ${categorie.id} onclick=getNews('${categorie.id}') class="hover:border-b-4 border-rose-700 hover:border-rose-700 cursor-pointer">${categorie.title}</li>
     `
     });
-document.getElementById('main').classList.add('border-b-4')
+    document.getElementById('main').classList.add('border-b-4')
 }
 
 const getNews = (id) => {
@@ -27,7 +31,7 @@ const showCategoreNews = (articles) => {
     newsContainer.innerHTML = ""
     articles.forEach(article => {
         newsContainer.innerHTML += `
-    <div class="news-card ">
+    <div id=${article.id} class="news-card ">
                     <img class="mx-auto"
                         src="${article.image.srcset[0].url}"
                         alt="">
@@ -44,19 +48,66 @@ const showCategoreNews = (articles) => {
 
     })
 
-   
+
 }
+
+document.getElementById('news-card-container').addEventListener('click', (e) => {
+    if (e.target.innerText === "BookMark") {
+        let bookmarkBtn = e.target;
+
+        let bookmarkId = bookmarkBtn.parentNode.parentNode.getAttribute("id")
+        let bookmarkTitle = bookmarkBtn.parentNode.parentNode.querySelector('h2').innerText;
+        let bookmarkImg = bookmarkBtn.parentNode.parentNode.querySelector('img').getAttribute("src")
+
+        let bookMarkObj = {
+            title: bookmarkTitle,
+            id: bookmarkId,
+            img: bookmarkImg
+        }
+        bookMarkArr.push(bookMarkObj)
+        bookMarkIdArr.push(bookmarkId)
+        
+        showBookMarks(bookMarkArr)
+
+    }
+})
+const showBookMarks = (bookMarkArr) => {
+    let bookMarkContainer = document.getElementById('bookmark-container')
+    bookMarkContainer.innerHTML = ""
+    bookMarkArr.forEach(bookmark => {
+        bookMarkContainer.innerHTML += `
+     <div class="bookmark px-5 py-5 border-2 border-gray-500 rounded-lg mt-4">
+                 <div class="mb-5">
+                    <img class="" src="${bookmark.img}" alt="">
+                <h1 class="font-semibold text-xl mt-3">${bookmark.title}</h1>
+                 </div>
+                <button onclick= deleteBookmark('${bookmark.id}') class="btn">Delete</button>
+               </div>
+    `
+    }
+    )
+}
+const deleteBookmark = (bookMarkId) => {
+
+let filterBookMarkArr= bookMarkArr.filter(bookmark => bookmark.id !==bookMarkId);
+bookMarkArr = filterBookMarkArr
+showBookMarks(bookMarkArr)
+
+}
+
+
 document.getElementById('category-link-container').addEventListener("click", (e) => {
-document.getElementById('main').classList.remove('border-b-4')
+    document.getElementById('main').classList.remove('border-b-4')
     if (e.target.localName === "li") {
         let allLi = e.target.parentNode.querySelectorAll('li')
         allLi.forEach(li => li.classList.remove('border-b-4'))
         e.target.classList.add('border-b-4')
         document.getElementById('section-heading').innerText = e.target.innerText;
-        
+
     };
 
 })
+
 
 getNews('main')
 getCategories()
