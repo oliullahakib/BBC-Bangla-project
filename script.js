@@ -27,10 +27,10 @@ const getNews = (id) => {
 
 }
 const showCategoreNews = (articles) => {
-
     let newsContainer = document.getElementById('news-card-container')
     newsContainer.innerHTML = ""
     articles.forEach(article => {
+        
         newsContainer.innerHTML += `
     <div id=${article.id} class="news-card ">
                     <img class="mx-auto"
@@ -41,7 +41,7 @@ const showCategoreNews = (articles) => {
                         <p class="text-gray-500">${article.time}</p>
                     </div>
                     <div class="mt-3">
-                        <button class="btn">Details</button>
+                        <button onclick=showDtails('${article.image.srcset[0].url}') class="btn">Details</button>
                         <button class="btn btn-primary">BookMark</button>
                     </div>
                 </div>
@@ -51,7 +51,13 @@ const showCategoreNews = (articles) => {
 
 
 }
-
+const showDtails =(img,description)=>{ 
+   let modal = document.getElementById("news_modal");
+   modal.querySelector('img').setAttribute('src',`${img}`);
+    console.log(img,description)
+    modal.showModal()
+}
+   
 document.getElementById('news-card-container').addEventListener('click', (e) => {
     if (e.target.innerText === "BookMark") {
         let bookmarkBtn = e.target;
